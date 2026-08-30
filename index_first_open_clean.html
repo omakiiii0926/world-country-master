@@ -1,0 +1,909 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<meta name="theme-color" content="#032b4d">
+<meta name="description" content="WORLD COUNTRY MASTERは、195か国の首都・国旗・国境・国の位置を学べる無料の世界地理クイズゲーム。初級・中級・上級、地域別、デイリーチャレンジに対応。">
+<meta name="keywords" content="世界地理ゲーム,国旗クイズ,首都クイズ,国境クイズ,国の位置クイズ,地理クイズ,世界の国,195か国,無料ゲーム">
+<meta name="robots" content="index,follow">
+<meta property="og:type" content="website">
+<meta property="og:title" content="WORLD COUNTRY MASTER｜無料の世界地理クイズ">
+<meta property="og:description" content="195か国の首都・国旗・国境・国の位置に挑戦！遊びながら世界地理をマスターしよう。">
+<meta property="og:url" content="https://omakiiii0926.github.io/world-country-master/">
+<meta name="twitter:card" content="summary">
+<link rel="canonical" href="https://omakiiii0926.github.io/world-country-master/">
+<title>WORLD COUNTRY MASTER｜国旗・首都・国境を学べる無料世界地理ゲーム</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<style>
+*{box-sizing:border-box}html,body{margin:0;min-height:100%;overscroll-behavior:none}body{font-family:"Arial Rounded MT Bold","Hiragino Maru Gothic ProN","Trebuchet MS",Arial,sans-serif;color:#fff;background:#032b4d;background-image:linear-gradient(rgba(105,220,255,.09) 1px,transparent 1px),linear-gradient(90deg,rgba(105,220,255,.09) 1px,transparent 1px),radial-gradient(circle at center,#075b83 0%,#043d62 48%,#021c34 100%);background-size:55px 55px,55px 55px,100% 100%;background-attachment:fixed;padding-top:env(safe-area-inset-top);padding-bottom:env(safe-area-inset-bottom)}button{font:inherit;cursor:pointer}.screen{display:none;min-height:100vh;padding:18px}.screen.active{display:block}.container{width:min(1050px,100%);margin:auto}.card{background:rgba(3,27,49,.97);border:1px solid rgba(90,220,255,.25);border-radius:22px;padding:20px;box-shadow:0 15px 45px rgba(0,0,0,.42)}.home{text-align:center;padding-top:6vh}.logo{font-size:clamp(30px,7vw,62px);font-weight:900;text-shadow:0 5px 20px #000}.subtitle{color:#bcefff;margin:10px 0 30px}.menu{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px}.btn{border:0;border-radius:15px;padding:15px 18px;color:#fff;font-weight:900;background:linear-gradient(145deg,#09a9dd,#07517d);box-shadow:0 5px 0 #033b59,0 8px 20px rgba(0,0,0,.25)}.btn.secondary{background:linear-gradient(145deg,#145474,#092f48)}.btn.danger{background:linear-gradient(145deg,#d64545,#7d2222)}.back{border:1px solid rgba(255,255,255,.2);border-radius:10px;padding:10px 15px;color:#fff;background:rgba(255,255,255,.08);font-weight:bold;margin-bottom:14px}.setting{background:rgba(255,255,255,.045);padding:16px;margin:14px 0;border-radius:15px}.settingTitle{color:#9deaff;font-weight:900;margin-bottom:10px}.optionRow{display:flex;flex-wrap:wrap;gap:9px}.option{border:1px solid rgba(255,255,255,.15);border-radius:11px;padding:10px 14px;color:#fff;background:#063b5a;font-weight:bold}.option.selected{background:#079fd0;border-color:#83eaff}.quizTop{display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:10px}.status{background:rgba(0,0,0,.28);border-radius:11px;padding:8px 11px;font-weight:bold}.progress{height:10px;background:rgba(255,255,255,.12);border-radius:20px;overflow:hidden;margin-bottom:14px}.progressBar{height:100%;background:linear-gradient(90deg,#00b8ed,#65e8ff);width:0}.question{text-align:center;font-size:clamp(22px,4vw,32px);font-weight:900}.questionSub{text-align:center;color:#a8d9e8;margin-bottom:13px}.flag{font-size:95px;text-align:center;margin:8px}.choices{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}.choice{min-height:58px;border:0;border-radius:14px;padding:12px;color:#fff;background:linear-gradient(145deg,#075d86,#063d5c);font-weight:900;box-shadow:0 5px 0 #032c43}.choice.correct{background:#159449}.choice.wrong{background:#d33e3e}.choice.disabled{pointer-events:none}.feedback{text-align:center;min-height:36px;margin-top:12px;font-size:18px;font-weight:900}.next{text-align:center;margin-top:8px}.borderQuestion{display:none;text-align:center;margin-bottom:14px;padding:16px;border-radius:17px;background:linear-gradient(145deg,#503d00,#2c2300);border:3px solid #ffd83d}.borderQuestion small{color:#ffe77a;letter-spacing:2px}.borderQuestion b{display:block;font-size:clamp(22px,5vw,32px);margin-top:5px}.borderInfo{display:none;text-align:center;color:#dff8ff;margin-bottom:10px}.legend{display:none;text-align:center;background:rgba(0,0,0,.3);padding:10px;border-radius:12px;margin-bottom:10px;line-height:2}.chip{display:inline-block;width:15px;height:15px;vertical-align:-2px;border-radius:2px;margin-right:4px}.yellow{background:#FFD600;border:2px solid #000}.white{background:#fff;border:2px solid #000}.blue{background:#91dff1;border:1px solid #5caabb}#map{height:430px;border-radius:16px;overflow:hidden;background:#91dff1;border:2px solid rgba(255,255,255,.25);margin-bottom:10px}.answerBox{display:none;padding:16px;margin-top:14px;border-radius:16px;text-align:center;background:linear-gradient(145deg,#6d5500,#3b2e00);border:3px solid #ffd83d}.answerBox .country{font-size:clamp(24px,5vw,34px);font-weight:900;color:#ffd83d}.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px}.countryCard{padding:12px;min-height:110px;text-align:center;border-radius:14px;background:#063b58;border:1px solid rgba(255,255,255,.12)}.countryCard.locked{background:#182b3a;color:#8294a2}.countryFlag{font-size:38px}.titleCard,.scoreRow{padding:13px;border-bottom:1px solid rgba(255,255,255,.1)}.modal{display:none;position:fixed;inset:0;z-index:9999;align-items:center;justify-content:center;padding:20px;background:rgba(0,0,0,.78)}.modal.active{display:flex}.modalContent{width:min(600px,100%);max-height:90vh;overflow:auto;padding:22px;border-radius:22px;background:#062846;border:1px solid #45bde6;text-align:center}.bigScore{text-align:center;font-size:56px;font-weight:900;color:#61e3ff}@media(max-width:650px){.choices{grid-template-columns:1fr}#map{height:340px}.card{padding:15px}}
+/* ===== mobile layout stabilization ===== */
+.screen{width:100%;overflow-x:hidden}
+.container{max-width:1050px;padding-left:0;padding-right:0}
+.home{display:flex;flex-direction:column;align-items:center}
+.home>.card{width:100%}
+.menu{align-items:stretch}
+.menu .btn{width:100%;min-height:58px;margin:0;display:flex;align-items:center;justify-content:center;text-align:center;line-height:1.25}
+.optionRow{align-items:stretch}
+.option{margin:0;min-height:46px;display:flex;align-items:center;justify-content:center}
+.quizTop{align-items:center}
+.quizTop .back{margin:0}
+.quizTop .status{min-width:86px;text-align:center}
+.next .btn{min-width:170px}
+/* ===== unlock animation ===== */
+.modal.unlocking{background:radial-gradient(circle at center,rgba(0,184,237,.32),rgba(0,0,0,.88) 58%)}
+.modal.unlocking .modalContent{overflow:hidden;position:relative;border:2px solid #68e8ff;box-shadow:0 0 30px rgba(97,227,255,.55),0 20px 70px rgba(0,0,0,.65);animation:unlockPanel .48s cubic-bezier(.18,.9,.28,1.18) both}
+.modal.unlocking .modalContent:before,.modal.unlocking .modalContent:after{content:"";position:absolute;inset:-45%;pointer-events:none;background:conic-gradient(from 0deg,transparent,rgba(110,236,255,.2),transparent 18%,transparent 50%,rgba(255,216,61,.18),transparent 68%);animation:unlockSpin 5s linear infinite}
+.modal.unlocking .modalContent:after{animation-direction:reverse;animation-duration:7s}
+.unlockWrap{position:relative;z-index:1;padding:8px 4px 4px}
+.unlockKicker{font-size:13px;font-weight:900;letter-spacing:4px;color:#7ceaff;text-shadow:0 0 12px rgba(124,234,255,.9);animation:unlockFade .45s .05s both}
+.unlockIcon{font-size:72px;line-height:1;margin:10px 0 2px;filter:drop-shadow(0 0 18px rgba(255,216,61,.5));animation:unlockBounce .72s cubic-bezier(.17,.89,.32,1.4) both}
+.unlockBurst{font-size:15px;color:#ffe873;font-weight:900;letter-spacing:1px;animation:unlockFade .55s .18s both}
+.unlockFlag{font-size:68px;line-height:1.15;margin:8px 0;filter:drop-shadow(0 7px 8px rgba(0,0,0,.35));animation:unlockFlag .7s .25s cubic-bezier(.2,.85,.25,1.25) both}
+.unlockName{font-size:clamp(27px,7vw,40px);font-weight:900;margin:5px 0;color:#fff;text-shadow:0 0 18px rgba(97,227,255,.45);animation:unlockFade .55s .35s both}
+.unlockSub{color:#bcefff;font-weight:800;margin-top:6px;animation:unlockFade .55s .44s both}
+.unlockStars{font-size:20px;letter-spacing:10px;color:#ffe873;margin:10px 0 0;animation:unlockStars 1.05s .2s both}
+@keyframes unlockPanel{0%{opacity:0;transform:scale(.72) translateY(18px)}70%{opacity:1;transform:scale(1.035) translateY(-2px)}100%{opacity:1;transform:scale(1) translateY(0)}}
+@keyframes unlockBounce{0%{opacity:0;transform:scale(.25) rotate(-12deg)}60%{opacity:1;transform:scale(1.18) rotate(5deg)}100%{transform:scale(1) rotate(0)}}
+@keyframes unlockFlag{0%{opacity:0;transform:translateY(28px) scale(.4)}70%{opacity:1;transform:translateY(-4px) scale(1.12)}100%{opacity:1;transform:none}}
+@keyframes unlockFade{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+@keyframes unlockStars{0%{opacity:0;transform:scale(.4)}45%{opacity:1;transform:scale(1.25)}100%{opacity:1;transform:scale(1)}}
+@keyframes unlockSpin{to{transform:rotate(360deg)}}
+@media(max-width:650px){
+  .screen{padding:12px 10px 18px}
+  .home{padding-top:3vh}
+  .logo{font-size:clamp(28px,8.8vw,42px);line-height:1.06}
+  .subtitle{margin:10px 0 20px;font-size:14px}
+  .home>.card{padding:13px}
+  .menu{grid-template-columns:1fr 1fr;gap:11px}
+  .menu .btn{min-height:60px;padding:11px 8px;font-size:14px;border-radius:13px}
+  .setting{padding:13px;margin:11px 0}
+  .optionRow{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+  .option{width:100%;padding:9px 7px;font-size:14px}
+  .quizTop{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
+  .quizTop .back,.quizTop .status{width:100%;min-width:0;padding:8px 5px;font-size:12px}
+  .question{font-size:22px}
+  .choice{min-height:54px;font-size:15px}
+  .modalContent{padding:18px 14px}
+  .unlockIcon{font-size:62px}.unlockFlag{font-size:58px}.unlockStars{letter-spacing:6px}
+}
+@media(max-width:380px){.menu{grid-template-columns:1fr}.menu .btn{min-height:52px}.optionRow{grid-template-columns:1fr 1fr}}
+
+/* ===== tactile button press feedback ===== */
+.btn,.back,.option,.choice,.countryCard{
+  -webkit-tap-highlight-color:transparent;
+  touch-action:manipulation;
+  transition:transform .08s ease,box-shadow .08s ease,filter .08s ease,background .12s ease;
+}
+.btn:active,.back:active,.option:active,.choice:active,.countryCard:active{
+  transform:translateY(4px) scale(.985);
+  filter:brightness(.92);
+}
+.btn:active{box-shadow:0 1px 0 #033b59,0 3px 8px rgba(0,0,0,.24)}
+.choice:active{box-shadow:0 1px 0 #032c43}
+.option:active,.back:active{box-shadow:inset 0 2px 8px rgba(0,0,0,.28)}
+.choice.disabled:active{transform:none;filter:none}
+
+/* ===== combo / hint ===== */
+.comboStatus{color:#ffe873;text-shadow:0 0 10px rgba(255,216,61,.35)}
+.comboPop{animation:comboPop .34s cubic-bezier(.18,.9,.28,1.25)}
+@keyframes comboPop{0%{transform:scale(.78)}60%{transform:scale(1.18)}100%{transform:scale(1)}}
+.hintArea{margin-top:12px;text-align:center}
+.hintBtn{background:linear-gradient(145deg,#8b64e8,#4b2e93)!important;box-shadow:0 5px 0 #38206f,0 8px 18px rgba(0,0,0,.24)!important}
+.hintBtn:active{box-shadow:0 1px 0 #38206f,0 3px 8px rgba(0,0,0,.24)!important}
+.hintBox{display:none;margin:10px auto 2px;padding:12px 14px;max-width:650px;border-radius:13px;background:rgba(112,78,189,.18);border:1px solid rgba(190,163,255,.5);color:#efe8ff;font-weight:800;line-height:1.7}
+.hintCost{font-size:12px;color:#cfc4ef;margin-top:5px}
+
+/* ===== rules ===== */
+.rulesList{display:grid;gap:12px;text-align:left}
+.ruleCard{padding:14px 16px;border-radius:15px;background:rgba(255,255,255,.05);border:1px solid rgba(126,224,255,.18);line-height:1.7}
+.ruleCard b{color:#83eaff;font-size:17px}
+.ruleExample{color:#ffe873;font-weight:900}
+
+
+.homeIntro{max-width:760px;margin:-15px auto 24px;padding:11px 15px;border-radius:14px;background:rgba(0,184,237,.10);border:1px solid rgba(105,232,255,.22);color:#d9f8ff;font-weight:800;line-height:1.55}
+.shareBox{margin:18px 0 10px;padding:15px;border-radius:16px;background:rgba(0,184,237,.09);border:1px solid rgba(105,232,255,.24);text-align:center}
+.shareBox .btn{width:100%;margin-top:8px}
+.shareStatus{min-height:22px;margin-top:8px;color:#9deaff;font-weight:800;font-size:14px}
+.dailyToday{margin:12px 0;padding:12px;border-radius:14px;background:rgba(255,216,61,.08);border:1px solid rgba(255,216,61,.28);color:#fff2a6;font-weight:800;text-align:center}
+
+
+.dailyHero{
+  max-width:820px;
+  margin:0 auto 24px;
+  padding:18px;
+  border-radius:22px;
+  background:linear-gradient(135deg,rgba(255,216,61,.20),rgba(0,184,237,.14));
+  border:2px solid rgba(255,216,61,.65);
+  box-shadow:0 10px 28px rgba(0,0,0,.22),inset 0 0 0 1px rgba(255,255,255,.08);
+  text-align:center;
+}
+.dailyHeroBadge{
+  display:inline-block;
+  margin-bottom:8px;
+  padding:5px 11px;
+  border-radius:999px;
+  background:#ffd83d;
+  color:#17324d;
+  font-weight:900;
+  font-size:13px;
+}
+.dailyHero h2{
+  margin:4px 0 6px;
+  font-size:clamp(22px,5vw,32px);
+  color:#fff7bf;
+}
+.dailyHero p{
+  margin:0 0 12px;
+  color:#eafaff;
+  font-weight:800;
+  line-height:1.55;
+}
+.dailyHero .btn{
+  width:100%;
+  max-width:520px;
+  font-size:19px;
+  padding:15px 18px;
+  background:linear-gradient(180deg,#ffe66c,#ffc928);
+  color:#17324d;
+  border:2px solid rgba(255,255,255,.75);
+  box-shadow:0 6px 0 #b88600,0 10px 18px rgba(0,0,0,.2);
+}
+.dailyHero .btn:active{
+  transform:translateY(5px) scale(.985);
+  box-shadow:0 1px 0 #b88600,0 5px 10px rgba(0,0,0,.18);
+}
+.dailyHeroSmall{
+  margin-top:9px;
+  font-size:13px;
+  color:#bcefff;
+  font-weight:700;
+}
+
+
+.upgradeStats{max-width:820px;margin:0 auto 22px;display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.upgradeStat{padding:10px 6px;border-radius:14px;background:rgba(0,184,237,.10);border:1px solid rgba(105,232,255,.22);text-align:center;color:#eaffff;font-weight:900}
+.upgradeStat b{display:block;font-size:20px;color:#fff}
+.dailyStreak{margin:10px auto 0;max-width:520px;padding:8px 12px;border-radius:12px;background:rgba(255,255,255,.09);color:#fff7bf;font-weight:900}
+.resultRank{font-size:72px;font-weight:1000;text-align:center;line-height:1;margin:8px 0;text-shadow:0 5px 18px rgba(0,0,0,.25)}
+.resultGrid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin:14px 0}
+.resultMini{padding:11px;border-radius:14px;background:rgba(0,184,237,.09);border:1px solid rgba(105,232,255,.22);text-align:center;font-weight:900}
+.microMarker{background:#fff;border:3px solid #111;border-radius:50%;box-shadow:0 0 0 3px rgba(255,255,255,.35)}
+@media(max-width:600px){.upgradeStats{grid-template-columns:repeat(3,1fr)}.upgradeStat{font-size:11px}.upgradeStat b{font-size:17px}}
+
+
+.bookTools{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:12px 0}
+.bookTools input,.bookTools select{width:100%;padding:11px;border-radius:12px;border:1px solid rgba(105,232,255,.28);background:rgba(255,255,255,.08);color:#fff;font:inherit}
+.bookTools option{color:#111}.bookProgressBar{height:14px;border-radius:999px;background:rgba(255,255,255,.12);overflow:hidden;margin:8px 0 16px}.bookProgressFill{height:100%;background:linear-gradient(90deg,#23d5ff,#ffd83d);transition:width .35s}
+.statsGrid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin:14px 0}.statsCard{padding:14px;border-radius:16px;background:rgba(0,184,237,.09);border:1px solid rgba(105,232,255,.22);text-align:center}.statsCard b{display:block;font-size:23px;margin-top:4px;color:#fff}
+.modeBars{display:grid;gap:8px;margin-top:14px}.modeBarRow{display:grid;grid-template-columns:100px 1fr 42px;gap:8px;align-items:center;font-weight:800}.modeBar{height:10px;border-radius:999px;background:rgba(255,255,255,.12);overflow:hidden}.modeBar>i{display:block;height:100%;background:linear-gradient(90deg,#23d5ff,#ffd83d);border-radius:999px}
+.toggleRow{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:13px;margin:8px 0;border-radius:14px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1)}.toggleBtn{min-width:90px}
+.comboMilestone{position:fixed;inset:0;display:none;align-items:center;justify-content:center;z-index:5000;pointer-events:none;background:radial-gradient(circle,rgba(255,216,61,.18),transparent 55%)}.comboMilestone.show{display:flex;animation:milestoneFade 1.25s ease both}.comboMilestoneInner{font-size:clamp(34px,10vw,72px);font-weight:1000;text-align:center;color:#fff5a7;text-shadow:0 5px 0 #a66b00,0 10px 30px #000;animation:milestonePop 1.25s ease both}
+.dailyClearOverlay{position:fixed;inset:0;z-index:5100;display:none;align-items:center;justify-content:center;padding:20px;background:radial-gradient(circle at center,rgba(255,216,61,.28),rgba(0,24,61,.93) 58%)}.dailyClearOverlay.show{display:flex}.dailyClearCard{max-width:480px;width:100%;text-align:center;padding:28px;border-radius:24px;background:linear-gradient(160deg,#07366a,#081b3c);border:2px solid #ffd83d;box-shadow:0 18px 55px rgba(0,0,0,.45)}.dailyClearBig{font-size:52px;margin:8px 0}.dailyCompare{padding:11px;margin:10px 0;border-radius:13px;background:rgba(255,216,61,.10);border:1px solid rgba(255,216,61,.35);font-weight:900;color:#fff7bf}
+.mapErrorBox{height:100%;display:flex;align-items:center;justify-content:center;padding:20px;text-align:center;color:#123b4c;background:#dff5ff}
+@keyframes milestonePop{0%{transform:scale(.2);opacity:0}28%{transform:scale(1.14);opacity:1}70%{transform:scale(1)}100%{transform:scale(1.05);opacity:0}}@keyframes milestoneFade{0%{opacity:0}15%{opacity:1}80%{opacity:1}100%{opacity:0}}
+@media(max-width:600px){.bookTools{grid-template-columns:1fr}.modeBarRow{grid-template-columns:86px 1fr 36px;font-size:12px}}
+
+</style>
+</head>
+<body>
+<section id="home" class="screen active"><div class="container home"><div class="logo">🌍 WORLD COUNTRY MASTER</div><div class="subtitle">195か国の「首都・国旗・国境・位置」を楽しく学べる無料の世界地理クイズ</div>
+<div class="homeIntro">🌍 初めての人は、まず「今日の10問」から！慣れたら首都・国旗・国境・国の位置モードにも挑戦しよう。</div>
+<div class="dailyHero">
+  <div class="dailyHeroBadge">⭐ 初めての人におすすめ</div>
+  <h2>📅 まずは今日の10問！</h2>
+  <p>毎日みんな同じ、やさしめの問題に挑戦。<br>WORLD COUNTRY MASTERを最初に体験するならここから！</p>
+  <button class="btn" onclick="startDailyFromHome()">▶ デイリーチャレンジを始める</button>
+  <div class="dailyHeroSmall">約2〜3分で遊べます・結果はシェアできます</div><div class="dailyStreak" id="dailyHeroStreak">🔥 デイリー連続記録：0日</div>
+</div>
+<div class="upgradeStats">
+  <div class="upgradeStat">🎮 総プレイ<b id="homePlayCount">0</b></div>
+  <div class="upgradeStat">📅 連続デイリー<b id="homeDailyStreak">0日</b></div>
+  <div class="upgradeStat">🏆 デイリーBEST<b id="homeDailyBest">--</b></div>
+</div><div class="card"><div class="menu"><button class="btn" onclick="openMode('capital')">🏛️ 首都モード</button><button class="btn" onclick="openMode('flag')">🏳️ 国旗モード</button><button class="btn" onclick="openMode('border')">🗺️ 国境モード</button><button class="btn" onclick="openMode('location')">🧭 国の位置モード</button><button class="btn secondary" onclick="showScreen('book')">📚 国図鑑</button><button class="btn secondary" onclick="showScreen('titles')">🏆 称号</button><button class="btn secondary" onclick="showScreen('scores')">📊 スコア</button><button class="btn secondary" onclick="showScreen('stats')">📈 統計</button><button class="btn secondary" onclick="showScreen('settings')">⚙️ 設定</button><button class="btn secondary" onclick="showScreen('rules')">📖 ゲームルール</button></div></div></div></section>
+<section id="modeSettings" class="screen"><div class="container"><div class="card"><button class="back" onclick="showScreen('home')">← ホーム</button><h1 id="modeTitle">ゲーム設定</h1><div class="setting"><div class="settingTitle">🎚️ 難易度</div><div class="optionRow"><button class="option selected" data-type="difficulty" data-value="easy" onclick="choose(this)">🟢 初級</button><button class="option" data-type="difficulty" data-value="normal" onclick="choose(this)">🟡 中級</button><button class="option" data-type="difficulty" data-value="hard" onclick="choose(this)">🔴 上級</button></div><p id="difficultyInfo"></p></div><div class="setting"><div class="settingTitle">🔢 問題数</div><div class="optionRow"><button class="option selected" data-type="count" data-value="10" onclick="choose(this)">10問</button><button class="option" data-type="count" data-value="20" onclick="choose(this)">20問</button><button class="option" data-type="count" data-value="50" onclick="choose(this)">50問</button></div></div><div class="setting"><div class="settingTitle">🌎 地域</div><div class="optionRow"><button class="option selected" data-type="region" data-value="all" onclick="choose(this)">全世界</button><button class="option" data-type="region" data-value="アジア" onclick="choose(this)">アジア</button><button class="option" data-type="region" data-value="ヨーロッパ" onclick="choose(this)">ヨーロッパ</button><button class="option" data-type="region" data-value="アフリカ" onclick="choose(this)">アフリカ</button><button class="option" data-type="region" data-value="北アメリカ" onclick="choose(this)">北アメリカ</button><button class="option" data-type="region" data-value="南アメリカ" onclick="choose(this)">南アメリカ</button><button class="option" data-type="region" data-value="オセアニア" onclick="choose(this)">オセアニア</button></div></div><div class="setting"><div class="settingTitle">🔥 特殊ルール</div><div class="optionRow"><button class="option selected" data-type="rule" data-value="normal" onclick="choose(this)">通常</button><button class="option" data-type="rule" data-value="time" onclick="choose(this)">⏱️ タイムアタック</button><button class="option" data-type="rule" data-value="nomiss" onclick="choose(this)">💎 ノーミス</button></div></div><button class="btn" style="width:100%" onclick="startGame()">🎮 ゲーム開始 ▶</button></div></div></section>
+<section id="quiz" class="screen"><div class="container"><div class="quizTop"><button class="back" onclick="goHome()">⌂ ホーム</button><div class="status" id="counter"></div><div class="status" id="scoreDisplay"></div><div class="status comboStatus" id="comboDisplay">🔥 0 COMBO</div><div class="status" id="timer">⏱️ --</div></div><div class="progress"><div class="progressBar" id="progressBar"></div></div><div class="card"><div id="borderQuestion" class="borderQuestion"><small>🎯 QUESTION</small><b>黄色で表示された国はどこ？</b></div><div id="borderInfo" class="borderInfo">🟨 黄色の国を8択から答えよう</div><div id="question" class="question"></div><div id="questionSub" class="questionSub"></div><div id="flagArea"></div><div id="mapArea" style="display:none"><div id="legend" class="legend"><span class="chip yellow"></span>問題の国　<span class="chip white"></span>その他　<span class="chip blue"></span>海</div><div id="map"></div><button class="btn" style="width:100%;background:linear-gradient(145deg,#f0b900,#9b6800)" onclick="moveToCountry()">📍 問題の国へ移動</button></div><div id="choices" class="choices"></div>
+<div class="hintArea">
+  <button id="hintButton" class="btn hintBtn" onclick="showHint()">💡 ヒントを見る</button>
+  <div id="hintBox" class="hintBox"></div>
+  <div id="hintCost" class="hintCost">ヒント1回につき、この問題の獲得点 −20pt</div>
+</div>
+<div id="answerBox" class="answerBox"></div><div id="feedback" class="feedback"></div><div class="next"><button id="nextButton" class="btn" style="display:none" onclick="nextQuestion()">次の問題へ →</button></div></div></div></section>
+<section id="result" class="screen"><div class="container"><div class="card"><h1 style="text-align:center">🎉 RESULT</h1><div id="finalRank" class="resultRank">A</div><div id="finalScore" class="bigScore"></div><div id="finalDetail" style="text-align:center"></div><div class="shareBox"><b>📤 この結果を友達にシェア</b><button class="btn" onclick="shareResult()">📤 結果をシェア</button><div id="shareStatus" class="shareStatus"></div></div><button class="btn" style="width:100%" onclick="showScreen('home')">🏠 ホームへ</button></div></div></section>
+<section id="book" class="screen"><div class="container"><div class="card"><button class="back" onclick="showScreen('home')">← ホーム</button><h1>📚 国図鑑</h1><p id="bookProgress"></p><div class="bookProgressBar"><div id="bookProgressFill" class="bookProgressFill"></div></div><div class="bookTools"><input id="bookSearch" type="search" placeholder="🔎 国名を検索" oninput="renderBook()"><select id="bookState" onchange="renderBook()"><option value="all">すべて</option><option value="unlocked">✅ 解放済み</option><option value="locked">🔒 未解放</option></select><select id="bookRegion" onchange="renderBook()"><option value="all">🌎 全地域</option><option>アジア</option><option>ヨーロッパ</option><option>アフリカ</option><option>北アメリカ</option><option>南アメリカ</option><option>オセアニア</option></select></div><div id="countryGrid" class="grid"></div></div></div></section>
+<section id="titles" class="screen"><div class="container"><div class="card"><button class="back" onclick="showScreen('home')">← ホーム</button><h1>🏆 称号</h1><div id="titleList"></div></div></div></section>
+<section id="stats" class="screen"><div class="container"><div class="card"><button class="back" onclick="showScreen('home')">← ホーム</button><h1>📈 自分の統計</h1><div id="statsSummary" class="statsGrid"></div><h2>🎮 モード別プレイ回数</h2><div id="modeStats" class="modeBars"></div><div id="statsExtra"></div></div></div></section>
+<section id="scores" class="screen"><div class="container"><div class="card"><button class="back" onclick="showScreen('home')">← ホーム</button><h1>📊 スコア</h1><div id="bestScore" class="bigScore"></div><div id="scoreHistory"></div></div></div></section>
+
+<section id="rules" class="screen"><div class="container"><div class="card">
+<button class="back" onclick="showScreen('home')">← ホーム</button>
+<h1>📖 ゲームルール</h1>
+<div class="rulesList">
+  <div class="ruleCard"><b>🎯 基本ルール</b><br>首都・国旗・国境モードは8択、国の位置モードは地図をタップして答えます。回答後は「次の問題へ →」を押して進みます。</div>
+  <div class="ruleCard"><b>⭐ スコア</b><br>基本は正解で <span class="ruleExample">100pt</span>。不正解は <span class="ruleExample">−25pt</span>。</div>
+  <div class="ruleCard"><b>🔥 コンボ</b><br>連続正解でコンボが増えます。2連続正解から、1問ごとに <span class="ruleExample">+10ptずつ</span>、最大+100pt。不正解で0に戻ります。5・10・20 COMBOでは特別演出！</div>
+  <div class="ruleCard"><b>💡 ヒント</b><br>1問につき最大3段階。地域 → 島国・内陸国・沿岸国 → 半島・海・大陸内での位置など、より具体的な地理ヒントの順に表示されます。1回使うごとに、その問題の獲得点が <span class="ruleExample">20pt減少</span> します。</div>
+  <div class="ruleCard"><b>🏛️ 首都モード</b><br>表示された国の首都を8択から選びます。</div>
+  <div class="ruleCard"><b>🏳️ 国旗モード</b><br>表示された国旗の国名を8択から選びます。</div>
+  <div class="ruleCard"><b>🗺️ 国境モード</b><br>地図で黄色に表示された国を8択から選びます。</div>
+  <div class="ruleCard"><b>🧭 国の位置モード</b><br>表示された国名を見て、世界地図上の正しい国をタップします。正解は緑、不正解で選んだ国は赤、正しい国は黄色で表示されます。</div>
+  <div class="ruleCard"><b>📅 デイリーチャレンジ</b><br>毎日変わる、やさしめの共通10問に挑戦するモードです。同じ日の結果を友達とシェアして比べられます。</div>
+  <div class="ruleCard"><b>⚡ タイムアタック</b><br>制限時間内にできるだけ多く正解します。</div>
+  <div class="ruleCard"><b>💎 ノーミス</b><br>最後まで全問正解を狙うルールです。</div>
+  <div class="ruleCard"><b>📚 国図鑑</b><br>正解した国は図鑑にアンロック。検索・地域・解放状態で絞り込みでき、コンプリート率も確認できます。</div><div class="ruleCard"><b>📈 統計</b><br>総プレイ数・総正解数・正答率・最高COMBO・モード別プレイ数などを記録します。</div>
+</div>
+</div></div></section>
+
+<section id="settings" class="screen"><div class="container"><div class="card"><button class="back" onclick="showScreen('home')">← ホーム</button><h1>⚙️ 設定</h1><div class="toggleRow"><div><b>🔊 効果音</b><br><small>正解・不正解・コンボ時に再生</small></div><button id="soundToggle" class="btn secondary toggleBtn" onclick="toggleSound()">ON</button></div><div class="toggleRow"><div><b>📳 振動</b><br><small>対応端末で回答時に軽く振動</small></div><button id="vibrationToggle" class="btn secondary toggleBtn" onclick="toggleVibration()">ON</button></div><button class="btn danger" style="width:100%;margin:5px" onclick="resetBook()">📚 図鑑をリセット</button><button class="btn danger" style="width:100%;margin:5px" onclick="resetTitles()">🏆 称号をリセット</button><button class="btn danger" style="width:100%;margin:5px" onclick="resetScores()">📊 スコアをリセット</button><button class="btn danger" style="width:100%;margin:5px" onclick="resetAll()">🗑️ 全データをリセット</button></div></div></section>
+<div id="comboMilestone" class="comboMilestone"><div id="comboMilestoneInner" class="comboMilestoneInner"></div></div>
+<div id="dailyClearOverlay" class="dailyClearOverlay"><div class="dailyClearCard"><div style="font-weight:1000;color:#ffd83d">DAILY COMPLETE!</div><div class="dailyClearBig">📅✨</div><h2>今日のチャレンジ達成！</h2><div id="dailyClearText"></div><button class="btn" style="width:100%;margin-top:12px" onclick="closeDailyClear()">結果を見る →</button></div></div>
+<div id="modal" class="modal"><div class="modalContent"><button class="back" onclick="closeModal()">✕ 閉じる</button><div id="modalBody"></div></div></div>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+const rawCountries=`
+アフガニスタン|カブール|アジア|AF
+アルバニア|ティラナ|ヨーロッパ|AL
+アルジェリア|アルジェ|アフリカ|DZ
+アンドラ|アンドラ・ラ・ベリャ|ヨーロッパ|AD
+アンゴラ|ルアンダ|アフリカ|AO
+アンティグア・バーブーダ|セントジョンズ|北アメリカ|AG
+アルゼンチン|ブエノスアイレス|南アメリカ|AR
+アルメニア|エレバン|アジア|AM
+オーストラリア|キャンベラ|オセアニア|AU
+オーストリア|ウィーン|ヨーロッパ|AT
+アゼルバイジャン|バクー|アジア|AZ
+バハマ|ナッソー|北アメリカ|BS
+バーレーン|マナーマ|アジア|BH
+バングラデシュ|ダッカ|アジア|BD
+バルバドス|ブリッジタウン|北アメリカ|BB
+ベラルーシ|ミンスク|ヨーロッパ|BY
+ベルギー|ブリュッセル|ヨーロッパ|BE
+ベリーズ|ベルモパン|北アメリカ|BZ
+ベナン|ポルトノボ|アフリカ|BJ
+ブータン|ティンプー|アジア|BT
+ボリビア|スクレ|南アメリカ|BO
+ボスニア・ヘルツェゴビナ|サラエボ|ヨーロッパ|BA
+ボツワナ|ハボローネ|アフリカ|BW
+ブラジル|ブラジリア|南アメリカ|BR
+ブルネイ|バンダルスリブガワン|アジア|BN
+ブルガリア|ソフィア|ヨーロッパ|BG
+ブルキナファソ|ワガドゥグー|アフリカ|BF
+ブルンジ|ギテガ|アフリカ|BI
+カーボベルデ|プライア|アフリカ|CV
+カンボジア|プノンペン|アジア|KH
+カメルーン|ヤウンデ|アフリカ|CM
+カナダ|オタワ|北アメリカ|CA
+中央アフリカ共和国|バンギ|アフリカ|CF
+チャド|ンジャメナ|アフリカ|TD
+チリ|サンティアゴ|南アメリカ|CL
+中国|北京|アジア|CN
+コロンビア|ボゴタ|南アメリカ|CO
+コモロ|モロニ|アフリカ|KM
+コンゴ共和国|ブラザヴィル|アフリカ|CG
+コンゴ民主共和国|キンシャサ|アフリカ|CD
+コスタリカ|サンホセ|北アメリカ|CR
+コートジボワール|ヤムスクロ|アフリカ|CI
+クロアチア|ザグレブ|ヨーロッパ|HR
+キューバ|ハバナ|北アメリカ|CU
+キプロス|ニコシア|ヨーロッパ|CY
+チェコ|プラハ|ヨーロッパ|CZ
+デンマーク|コペンハーゲン|ヨーロッパ|DK
+ジブチ|ジブチ|アフリカ|DJ
+ドミニカ国|ロゾー|北アメリカ|DM
+ドミニカ共和国|サントドミンゴ|北アメリカ|DO
+エクアドル|キト|南アメリカ|EC
+エジプト|カイロ|アフリカ|EG
+エルサルバドル|サンサルバドル|北アメリカ|SV
+赤道ギニア|マラボ|アフリカ|GQ
+エリトリア|アスマラ|アフリカ|ER
+エストニア|タリン|ヨーロッパ|EE
+エスワティニ|ムババーネ|アフリカ|SZ
+エチオピア|アディスアベバ|アフリカ|ET
+フィジー|スバ|オセアニア|FJ
+フィンランド|ヘルシンキ|ヨーロッパ|FI
+フランス|パリ|ヨーロッパ|FR
+ガボン|リーブルヴィル|アフリカ|GA
+ガンビア|バンジュール|アフリカ|GM
+ジョージア|トビリシ|アジア|GE
+ドイツ|ベルリン|ヨーロッパ|DE
+ガーナ|アクラ|アフリカ|GH
+ギリシャ|アテネ|ヨーロッパ|GR
+グレナダ|セントジョージズ|北アメリカ|GD
+グアテマラ|グアテマラシティ|北アメリカ|GT
+ギニア|コナクリ|アフリカ|GN
+ギニアビサウ|ビサウ|アフリカ|GW
+ガイアナ|ジョージタウン|南アメリカ|GY
+ハイチ|ポルトープランス|北アメリカ|HT
+ホンジュラス|テグシガルパ|北アメリカ|HN
+ハンガリー|ブダペスト|ヨーロッパ|HU
+アイスランド|レイキャビク|ヨーロッパ|IS
+インド|ニューデリー|アジア|IN
+インドネシア|ジャカルタ|アジア|ID
+イラン|テヘラン|アジア|IR
+イラク|バグダッド|アジア|IQ
+アイルランド|ダブリン|ヨーロッパ|IE
+イスラエル|エルサレム|アジア|IL
+イタリア|ローマ|ヨーロッパ|IT
+ジャマイカ|キングストン|北アメリカ|JM
+日本|東京|アジア|JP
+ヨルダン|アンマン|アジア|JO
+カザフスタン|アスタナ|アジア|KZ
+ケニア|ナイロビ|アフリカ|KE
+キリバス|タラワ|オセアニア|KI
+クウェート|クウェート市|アジア|KW
+キルギス|ビシュケク|アジア|KG
+ラオス|ビエンチャン|アジア|LA
+ラトビア|リガ|ヨーロッパ|LV
+レバノン|ベイルート|アジア|LB
+レソト|マセル|アフリカ|LS
+リベリア|モンロビア|アフリカ|LR
+リビア|トリポリ|アフリカ|LY
+リヒテンシュタイン|ファドゥーツ|ヨーロッパ|LI
+リトアニア|ビリニュス|ヨーロッパ|LT
+ルクセンブルク|ルクセンブルク|ヨーロッパ|LU
+マダガスカル|アンタナナリボ|アフリカ|MG
+マラウイ|リロングウェ|アフリカ|MW
+マレーシア|クアラルンプール|アジア|MY
+モルディブ|マレ|アジア|MV
+マリ|バマコ|アフリカ|ML
+マルタ|バレッタ|ヨーロッパ|MT
+マーシャル諸島|マジュロ|オセアニア|MH
+モーリタニア|ヌアクショット|アフリカ|MR
+モーリシャス|ポートルイス|アフリカ|MU
+メキシコ|メキシコシティ|北アメリカ|MX
+ミクロネシア連邦|パリキール|オセアニア|FM
+モルドバ|キシナウ|ヨーロッパ|MD
+モナコ|モナコ|ヨーロッパ|MC
+モンゴル|ウランバートル|アジア|MN
+モンテネグロ|ポドゴリツァ|ヨーロッパ|ME
+モロッコ|ラバト|アフリカ|MA
+モザンビーク|マプト|アフリカ|MZ
+ミャンマー|ネピドー|アジア|MM
+ナミビア|ウィントフック|アフリカ|NA
+ナウル|ヤレン|オセアニア|NR
+ネパール|カトマンズ|アジア|NP
+オランダ|アムステルダム|ヨーロッパ|NL
+ニュージーランド|ウェリントン|オセアニア|NZ
+ニカラグア|マナグア|北アメリカ|NI
+ニジェール|ニアメ|アフリカ|NE
+ナイジェリア|アブジャ|アフリカ|NG
+北朝鮮|平壌|アジア|KP
+北マケドニア|スコピエ|ヨーロッパ|MK
+ノルウェー|オスロ|ヨーロッパ|NO
+オマーン|マスカット|アジア|OM
+パキスタン|イスラマバード|アジア|PK
+パラオ|ンゲルルムッド|オセアニア|PW
+パナマ|パナマシティ|北アメリカ|PA
+パプアニューギニア|ポートモレスビー|オセアニア|PG
+パラグアイ|アスンシオン|南アメリカ|PY
+ペルー|リマ|南アメリカ|PE
+フィリピン|マニラ|アジア|PH
+ポーランド|ワルシャワ|ヨーロッパ|PL
+ポルトガル|リスボン|ヨーロッパ|PT
+カタール|ドーハ|アジア|QA
+ルーマニア|ブカレスト|ヨーロッパ|RO
+ロシア|モスクワ|ヨーロッパ|RU
+ルワンダ|キガリ|アフリカ|RW
+セントクリストファー・ネービス|バセテール|北アメリカ|KN
+セントルシア|カストリーズ|北アメリカ|LC
+セントビンセント・グレナディーン|キングスタウン|北アメリカ|VC
+サモア|アピア|オセアニア|WS
+サンマリノ|サンマリノ|ヨーロッパ|SM
+サントメ・プリンシペ|サントメ|アフリカ|ST
+サウジアラビア|リヤド|アジア|SA
+セネガル|ダカール|アフリカ|SN
+セルビア|ベオグラード|ヨーロッパ|RS
+セーシェル|ビクトリア|アフリカ|SC
+シエラレオネ|フリータウン|アフリカ|SL
+シンガポール|シンガポール|アジア|SG
+スロバキア|ブラチスラバ|ヨーロッパ|SK
+スロベニア|リュブリャナ|ヨーロッパ|SI
+ソロモン諸島|ホニアラ|オセアニア|SB
+ソマリア|モガディシュ|アフリカ|SO
+南アフリカ|プレトリア|アフリカ|ZA
+韓国|ソウル|アジア|KR
+南スーダン|ジュバ|アフリカ|SS
+スペイン|マドリード|ヨーロッパ|ES
+スリランカ|スリジャヤワルダナプラコッテ|アジア|LK
+スーダン|ハルツーム|アフリカ|SD
+スリナム|パラマリボ|南アメリカ|SR
+スウェーデン|ストックホルム|ヨーロッパ|SE
+スイス|ベルン|ヨーロッパ|CH
+シリア|ダマスカス|アジア|SY
+タジキスタン|ドゥシャンベ|アジア|TJ
+タンザニア|ドドマ|アフリカ|TZ
+タイ|バンコク|アジア|TH
+東ティモール|ディリ|アジア|TL
+トーゴ|ロメ|アフリカ|TG
+トンガ|ヌクアロファ|オセアニア|TO
+トリニダード・トバゴ|ポートオブスペイン|北アメリカ|TT
+チュニジア|チュニス|アフリカ|TN
+トルコ|アンカラ|アジア|TR
+トルクメニスタン|アシガバート|アジア|TM
+ツバル|フナフティ|オセアニア|TV
+ウガンダ|カンパラ|アフリカ|UG
+ウクライナ|キーウ|ヨーロッパ|UA
+アラブ首長国連邦|アブダビ|アジア|AE
+イギリス|ロンドン|ヨーロッパ|GB
+アメリカ合衆国|ワシントンD.C.|北アメリカ|US
+ウルグアイ|モンテビデオ|南アメリカ|UY
+ウズベキスタン|タシケント|アジア|UZ
+バヌアツ|ポートビラ|オセアニア|VU
+バチカン市国|バチカン|ヨーロッパ|VA
+ベネズエラ|カラカス|南アメリカ|VE
+ベトナム|ハノイ|アジア|VN
+イエメン|サナア|アジア|YE
+ザンビア|ルサカ|アフリカ|ZM
+ジンバブエ|ハラレ|アフリカ|ZW
+パレスチナ|エルサレム|アジア|PS`.trim();
+const flagFromISO=iso=>iso.toUpperCase().split('').map(c=>String.fromCodePoint(127397+c.charCodeAt(0))).join('');
+const countries=rawCountries.split('\n').map(line=>{const [name,capital,region,iso]=line.split('|');return{name,capital,region,iso,flag:flagFromISO(iso)}});
+const easyNames=new Set(["日本","中国","韓国","北朝鮮","インド","タイ","ベトナム","フィリピン","インドネシア","マレーシア","シンガポール","パキスタン","サウジアラビア","アラブ首長国連邦","イスラエル","イギリス","フランス","ドイツ","イタリア","スペイン","ポルトガル","オランダ","ベルギー","スイス","オーストリア","ギリシャ","ポーランド","ロシア","ウクライナ","スウェーデン","ノルウェー","フィンランド","デンマーク","アメリカ合衆国","カナダ","メキシコ","キューバ","ジャマイカ","ブラジル","アルゼンチン","チリ","ペルー","コロンビア","オーストラリア","ニュージーランド","エジプト","南アフリカ","モロッコ","ケニア","ナイジェリア","エチオピア","ガーナ","トルコ","イラン","イラク","モンゴル","ネパール","カザフスタン","バングラデシュ","アイスランド","アイルランド","チェコ","ハンガリー","ルーマニア","クロアチア"]);
+const mediumNames=new Set(["アフガニスタン","アルバニア","アルジェリア","アンドラ","アンゴラ","アルメニア","アゼルバイジャン","バーレーン","ベラルーシ","ベリーズ","ベナン","ブータン","ボリビア","ボスニア・ヘルツェゴビナ","ボツワナ","ブルガリア","ブルキナファソ","カンボジア","カメルーン","中央アフリカ共和国","コスタリカ","コートジボワール","キプロス","コンゴ共和国","コンゴ民主共和国","エクアドル","エルサルバドル","エストニア","エスワティニ","フィジー","ガボン","ジョージア","グアテマラ","ギニア","ガイアナ","ハイチ","ホンジュラス","ヨルダン","クウェート","キルギス","ラオス","ラトビア","レバノン","リベリア","リビア","リトアニア","ルクセンブルク","マダガスカル","マラウイ","マリ","モルドバ","モンテネグロ","モザンビーク","ミャンマー","ナミビア","ニカラグア","ニジェール","北マケドニア","オマーン","パナマ","パラグアイ","カタール","ルワンダ","セネガル","セルビア"]);
+const hardNames=new Set(countries.filter(c=>!easyNames.has(c.name)&&!mediumNames.has(c.name)).map(c=>c.name));
+const difficultyInfo={easy:`🟢 初級：${easyNames.size}か国`,normal:`🟡 中級：${mediumNames.size}か国`,hard:`🔴 上級：${hardNames.size}か国`};
+
+const WCM_DATA_VERSION='2026-08-30-clean-v1';
+if(localStorage.getItem('wcm_data_version')!==WCM_DATA_VERSION){
+  [
+    'wcm_unlocked','wcm_titles','wcm_scores','wcm_player_stats','wcm_preferences'
+  ].forEach(k=>localStorage.removeItem(k));
+  localStorage.setItem('wcm_data_version',WCM_DATA_VERSION);
+}
+
+const load=k=>{try{return JSON.parse(localStorage.getItem(k)||'[]')}catch{return[]}};
+const loadObj=(k,fallback)=>{try{return JSON.parse(localStorage.getItem(k)||JSON.stringify(fallback))}catch{return fallback}};
+let unlocked=load('wcm_unlocked'),titleUnlocks=load('wcm_titles'),scores=load('wcm_scores');
+let preferences=loadObj('wcm_preferences',{sound:true,vibration:true});let geoJSONCache=null;let playerStats=loadObj('wcm_player_stats',{plays:0,dailyDates:[],dailyBest:0,totalHints:0,totalCorrect:0,totalQuestions:0,bestCombo:0,modePlays:{capital:0,flag:0,border:0,location:0,daily:0},dailyScores:{}});
+const save=()=>{localStorage.setItem('wcm_unlocked',JSON.stringify(unlocked));localStorage.setItem('wcm_titles',JSON.stringify(titleUnlocks));localStorage.setItem('wcm_scores',JSON.stringify(scores));localStorage.setItem('wcm_player_stats',JSON.stringify(playerStats));localStorage.setItem('wcm_preferences',JSON.stringify(preferences))};
+let mode='capital',config={difficulty:'easy',count:10,region:'all',rule:'normal'},questions=[],qIndex=0,current='',score=0,correctCount=0,answered=false,noMiss=true,timer=null,map=null,geoLayer=null,currentMapBounds=null,combo=0,maxCombo=0,hintLevel=0,hintPenalty=0,gameHintsUsed=0,noHintCombo=0,maxNoHintCombo=0;
+
+function playTone(kind='correct'){if(!preferences.sound)return;try{const AC=window.AudioContext||window.webkitAudioContext,ctx=new AC(),o=ctx.createOscillator(),g=ctx.createGain();o.frequency.value=kind==='correct'?660:kind==='combo'?880:220;g.gain.setValueAtTime(.05,ctx.currentTime);g.gain.exponentialRampToValueAtTime(.001,ctx.currentTime+.18);o.connect(g);g.connect(ctx.destination);o.start();o.stop(ctx.currentTime+.19)}catch{}}
+function vibrate(p){if(preferences.vibration&&navigator.vibrate)navigator.vibrate(p)}
+function toggleSound(){preferences.sound=!preferences.sound;save();renderPreferenceButtons();if(preferences.sound)playTone('correct')}
+function toggleVibration(){preferences.vibration=!preferences.vibration;save();renderPreferenceButtons();if(preferences.vibration)vibrate(35)}
+function renderPreferenceButtons(){const s=document.getElementById('soundToggle'),v=document.getElementById('vibrationToggle');if(s)s.textContent=preferences.sound?'ON':'OFF';if(v)v.textContent=preferences.vibration?'ON':'OFF'}
+function showComboMilestone(n){if(![5,10,20].includes(n))return;const w=document.getElementById('comboMilestone'),i=document.getElementById('comboMilestoneInner');i.innerHTML=`🔥<br>${n} COMBO!`;w.classList.remove('show');void w.offsetWidth;w.classList.add('show');playTone('combo');vibrate([30,35,50]);setTimeout(()=>w.classList.remove('show'),1300)}
+function yesterdayKey(){const d=new Date();d.setDate(d.getDate()-1);return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`}
+function closeDailyClear(){document.getElementById('dailyClearOverlay').classList.remove('show');showScreen('result')}
+function showDailyClear(correct,yesterday){let comp='<div class="dailyCompare">昨日の記録はありません</div>';if(Number.isFinite(yesterday)){const diff=correct-yesterday;comp=`<div class="dailyCompare">昨日 ${yesterday}/10 → 今日 ${correct}/10<br>${diff>0?'📈 +'+diff+'問！':diff<0?'📉 '+diff+'問':'➡️ 同じ記録！'}</div>`}document.getElementById('dailyClearText').innerHTML=`<div style="font-size:24px;font-weight:1000">${correct}/10 正解</div>${comp}<div>🔥 連続挑戦 ${getDailyStreak()}日</div>`;document.getElementById('dailyClearOverlay').classList.add('show');playTone('combo');vibrate([50,50,80])}
+function loadGeoJSON(){if(geoJSONCache)return Promise.resolve(geoJSONCache);return fetch('https://raw.githubusercontent.com/datasets/geo-countries/master/data/countries.geojson').then(r=>{if(!r.ok)throw 0;return r.json()}).then(g=>{geoJSONCache=g;return g})}
+function showMapError(retry){document.getElementById('map').innerHTML=`<div class="mapErrorBox"><div><div style="font-size:40px">🌐</div><b>地図を読み込めませんでした</b><p>通信を確認して再読み込みするか、この問題をスキップできます。</p><button class="btn" onclick="${retry}()">🔄 再読み込み</button><button class="btn secondary" onclick="skipBrokenMapQuestion()">⏭️ スキップ</button></div></div>`}
+function skipBrokenMapQuestion(){clearMap();qIndex++;qIndex>=questions.length?finishGame():showQuestion()}
+
+function showScreen(id){if(id!=='quiz')clearMap();document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');if(id==='book')renderBook();if(id==='titles')renderTitles();if(id==='scores')renderScores();if(id==='stats')renderStats();if(id==='settings')renderPreferenceButtons()}
+function clearMap(){if(map){try{map.remove()}catch{}}map=null;geoLayer=null;currentMapBounds=null}
+function startDailyFromHome(){
+  mode='daily';
+  config={difficulty:'normal',count:10,region:'all',rule:'normal'};
+  startGame();
+}
+
+function openMode(m){
+  mode=m;
+  document.getElementById('modeTitle').textContent={capital:'🏛️ 首都モード',flag:'🏳️ 国旗モード',border:'🗺️ 国境モード',location:'🧭 国の位置モード',daily:'📅 デイリーチャレンジ'}[m];
+  showScreen('modeSettings');
+  let old=document.getElementById('dailyToday');
+  if(old)old.remove();
+  if(m==='daily'){
+    const h=document.getElementById('modeTitle');
+    const info=document.createElement('div');
+    info.id='dailyToday';info.className='dailyToday';
+    info.textContent=`📅 ${dailyKey()}｜今日のやさしめ共通10問に挑戦！結果をシェアして比べよう。`;
+    h.insertAdjacentElement('afterend',info);
+  }
+}
+function choose(b){const t=b.dataset.type;b.parentElement.querySelectorAll('.option').forEach(x=>x.classList.remove('selected'));b.classList.add('selected');if(t==='difficulty'){config.difficulty=b.dataset.value;document.getElementById('difficultyInfo').textContent=difficultyInfo[config.difficulty]}if(t==='count')config.count=+b.dataset.value;if(t==='region')config.region=b.dataset.value;if(t==='rule')config.rule=b.dataset.value}
+function shuffle(a){a=a.slice();for(let i=a.length-1;i;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+function getPool(){const set=config.difficulty==='easy'?easyNames:config.difficulty==='normal'?mediumNames:hardNames;let p=countries.filter(c=>set.has(c.name));if(config.region!=='all')p=p.filter(c=>c.region===config.region);return p}
+function dailyKey(){
+  const d=new Date();
+  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+}
+function hashString(s){
+  let h=2166136261;
+  for(let i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,16777619)}
+  return h>>>0;
+}
+function seededShuffle(a,seed){
+  a=a.slice();
+  let x=seed>>>0;
+  const rnd=()=>{x+=0x6D2B79F5;let t=x;t=Math.imul(t^t>>>15,t|1);t^=t+Math.imul(t^t>>>7,t|61);return((t^t>>>14)>>>0)/4294967296};
+  for(let i=a.length-1;i>0;i--){const j=Math.floor(rnd()*(i+1));[a[i],a[j]]=[a[j],a[i]]}
+  return a;
+}
+function getDailyQuestions(){
+  const pool=countries.filter(c=>easyNames.has(c.name));
+  return seededShuffle(pool,hashString('WORLD-COUNTRY-MASTER-'+dailyKey())).slice(0,10).map(c=>c.name);
+}
+
+function startGame(){
+  clearInterval(timer);
+  let p=getPool();
+  if(mode!=='daily'&&!p.length){alert('この難易度・地域では出題できる国がありません。');return}
+  if(mode==='daily'){
+    questions=getDailyQuestions();
+  }else{
+    const count=Math.min(config.count,p.length);
+    questions=shuffle(p).slice(0,count).map(c=>c.name);
+  }
+  qIndex=0;score=0;correctCount=0;answered=false;noMiss=true;combo=0;maxCombo=0;hintLevel=0;hintPenalty=0;gameHintsUsed=0;noHintCombo=0;maxNoHintCombo=0;
+  showScreen('quiz');updateScore();updateCombo();
+  config.rule==='time'?startTimer():document.getElementById('timer').textContent='⏱️ --';
+  showQuestion();
+}
+function startTimer(){let sec=questions.length<=10?60:questions.length<=20?120:300;document.getElementById('timer').textContent='⏱️ '+sec;timer=setInterval(()=>{sec--;document.getElementById('timer').textContent='⏱️ '+sec;if(sec<=0){clearInterval(timer);finishGame()}},1000)}
+function showQuestion(){
+  if(qIndex>=questions.length){finishGame();return}
+  clearMap();
+  current=questions[qIndex];
+  const c=countries.find(x=>x.name===current);
+  answered=false;hintLevel=0;hintPenalty=0;
+  counter.textContent=`${qIndex+1} / ${questions.length}`;
+  progressBar.style.width=`${qIndex/questions.length*100}%`;
+  feedback.textContent='';
+  nextButton.style.display='none';
+  choices.innerHTML='';
+  flagArea.innerHTML='';
+  mapArea.style.display='none';
+  borderQuestion.style.display='none';
+  borderInfo.style.display='none';
+  answerBox.style.display='none';
+  hintBox.style.display='none';
+  hintBox.innerHTML='';
+  hintButton.style.display='inline-block';
+  hintButton.disabled=false;
+  hintButton.textContent='💡 ヒントを見る';
+  hintCost.style.display='block';
+  hintCost.textContent='ヒント1回につき、この問題の獲得点 −20pt';
+
+  const moveBtn=mapArea.querySelector('button[onclick="moveToCountry()"]');
+  if(moveBtn)moveBtn.style.display='block';
+  legend.style.display='none';
+
+  if(mode==='capital'||mode==='daily'){
+    question.textContent='🏛️ この国の首都を当てよう！';
+    questionSub.textContent=`${c.flag} ${c.name}`;
+    createChoices();
+  }else if(mode==='flag'){
+    question.textContent='🏳️ この国旗はどこの国？';
+    questionSub.textContent='8つの選択肢から選ぼう！';
+    flagArea.innerHTML=`<div class="flag">${c.flag}</div>`;
+    createChoices();
+  }else if(mode==='border'){
+    question.textContent='';
+    questionSub.textContent='';
+    borderQuestion.style.display='block';
+    borderQuestion.innerHTML='<small>🎯 QUESTION</small><b>黄色で表示された国はどこ？</b>';
+    borderInfo.style.display='block';
+    borderInfo.textContent='🟨 黄色の国を8択から答えよう';
+    mapArea.style.display='block';
+    legend.style.display='block';
+    setTimeout(initMap,80);
+    createChoices();
+  }else if(mode==='location'){
+    question.textContent=`🧭 「${c.name}」はどこ？`;
+    questionSub.textContent='世界地図から正しい国をタップしよう！';
+    mapArea.style.display='block';
+    borderInfo.style.display='block';
+    borderInfo.textContent='👆 地図を拡大・移動して国をタップ';
+    legend.style.display='block';
+    legend.innerHTML='<span class="chip white"></span>未回答　<span class="chip blue"></span>海';
+    if(moveBtn)moveBtn.style.display='none';
+    setTimeout(initLocationMap,80);
+  }
+}
+function createChoices(){const c=countries.find(x=>x.name===current),correct=(mode==='capital'||mode==='daily')?c.capital:current,ans=[correct];for(const x of shuffle(countries.filter(x=>x.name!==current))){const v=(mode==='capital'||mode==='daily')?x.capital:x.name;if(!ans.includes(v))ans.push(v);if(ans.length===8)break}shuffle(ans).forEach(v=>{const b=document.createElement('button');b.className='choice';b.textContent=v;b.onclick=()=>answerQuestion(v,correct,b);choices.appendChild(b)})}
+function answerQuestion(ans,correct,b){
+  if(answered)return;
+  answered=true;
+  hintButton.disabled=true;
+  document.querySelectorAll('.choice').forEach(x=>{
+    x.classList.add('disabled');
+    if(x.textContent===correct)x.classList.add('correct')
+  });
+  if(ans===correct){
+    combo++;
+    maxCombo=Math.max(maxCombo,combo);
+    const comboBonus=Math.min(100,Math.max(0,(combo-1)*10));
+    const gained=Math.max(20,100+comboBonus-hintPenalty);
+    score+=gained;
+    correctCount++;if(hintLevel===0){noHintCombo++;maxNoHintCombo=Math.max(maxNoHintCombo,noHintCombo)}else noHintCombo=0;
+    b.classList.add('correct');playTone('correct');vibrate(30);showComboMilestone(combo);
+    playTone('correct');vibrate(30);showComboMilestone(combo);feedback.textContent=`🎉 正解！ +${gained} pt${combo>=2?`　🔥 ${combo} COMBO!`:''}`;
+    unlockCountry(current);
+  }else{
+    score=Math.max(0,score-25);
+    combo=0;noHintCombo=0;
+    noMiss=false;
+    b.classList.add('wrong');playTone('wrong');vibrate([45,35,45]);
+    feedback.textContent=config.rule==='nomiss'?'💥 ノーミス失敗！':'❌ 不正解！ −25 pt';
+  }
+  if(mode==='border')showBorderAnswer();
+  updateScore();
+  updateCombo(true);
+  nextButton.style.display='inline-block';
+}
+function updateCombo(pop=false){
+  const el=document.getElementById('comboDisplay');
+  if(!el)return;
+  el.textContent=combo>=2?`🔥 ${combo} COMBO`:'🔥 0 COMBO';
+  if(pop&&combo>=2){
+    el.classList.remove('comboPop');
+    void el.offsetWidth;
+    el.classList.add('comboPop');
+  }
+}
+
+const landlockedCountries=new Set([
+'アフガニスタン','アンドラ','アルメニア','オーストリア','アゼルバイジャン','ベラルーシ','ブータン',
+'ボリビア','ボツワナ','ブルキナファソ','ブルンジ','中央アフリカ共和国','チャド','チェコ','エスワティニ',
+'エチオピア','ハンガリー','カザフスタン','キルギス','ラオス','レソト','リヒテンシュタイン',
+'ルクセンブルク','マラウイ','マリ','モルドバ','モンゴル','ネパール','ニジェール','北マケドニア',
+'パラグアイ','ルワンダ','サンマリノ','セルビア','スロバキア','南スーダン','スイス','タジキスタン',
+'トルクメニスタン','ウガンダ','ウズベキスタン','バチカン市国','ザンビア','ジンバブエ'
+]);
+
+const islandCountries=new Set([
+'アンティグア・バーブーダ','オーストラリア','バハマ','バーレーン','バルバドス','ブルネイ','カーボベルデ',
+'コモロ','キューバ','キプロス','ドミニカ国','ドミニカ共和国','フィジー','グレナダ','ハイチ',
+'アイスランド','インドネシア','アイルランド','ジャマイカ','日本','キリバス','マダガスカル',
+'モルディブ','マルタ','マーシャル諸島','モーリシャス','ミクロネシア連邦','ナウル','ニュージーランド',
+'パラオ','パプアニューギニア','フィリピン','セントクリストファー・ネービス','セントルシア',
+'セントビンセントおよびグレナディーン諸島','サモア','サントメ・プリンシペ','セーシェル',
+'シンガポール','ソロモン諸島','スリランカ','東ティモール','トンガ','トリニダード・トバゴ',
+'ツバル','イギリス','バヌアツ'
+]);
+
+const equatorCountries=new Set([
+'エクアドル','コロンビア','ブラジル','ガボン','コンゴ共和国','コンゴ民主共和国','ウガンダ',
+'ケニア','ソマリア','インドネシア','キリバス','サントメ・プリンシペ'
+]);
+
+const mostlySouthernCountries=new Set([
+'アルゼンチン','オーストラリア','ボリビア','ボツワナ','ブルンジ','チリ','コモロ','エスワティニ',
+'フィジー','レソト','マダガスカル','マラウイ','モーリシャス','モザンビーク','ナミビア',
+'ニュージーランド','パプアニューギニア','パラグアイ','ペルー','ルワンダ','サモア','セーシェル',
+'ソロモン諸島','南アフリカ','タンザニア','東ティモール','トンガ','ツバル','ウルグアイ',
+'バヌアツ','ザンビア','ジンバブエ'
+]);
+
+function geographyTypeHint(name){
+  if(islandCountries.has(name))return '🏝️ この国は島国です。';
+  if(landlockedCountries.has(name))return '⛰️ この国は海に面していない内陸国です。';
+  return '🌊 この国は海に面しています。';
+}
+function hemisphereHint(name){
+  if(equatorCountries.has(name))return '🌐 赤道が国土を通る、または赤道付近に位置する国です。';
+  if(mostlySouthernCountries.has(name))return '🧭 国土の大部分は南半球にあります。';
+  return '🧭 国土の大部分は北半球にあります。';
+}
+
+
+const subregionHints={
+'日本':'東アジアの島国です。','中国':'東アジアに位置する大国です。','韓国':'朝鮮半島の南部にあります。','北朝鮮':'朝鮮半島の北部にあります。',
+'インド':'南アジアにあります。','タイ':'東南アジアの大陸部にあります。','ベトナム':'東南アジアのインドシナ半島東部にあります。',
+'フィリピン':'東南アジアの多くの島からなる国です。','インドネシア':'東南アジアで赤道付近に広がる島国です。','マレーシア':'東南アジアでマレー半島とボルネオ島の一部にあります。',
+'シンガポール':'マレー半島南端付近の小さな島国です。','パキスタン':'南アジアの西側にあります。','サウジアラビア':'アラビア半島の大部分を占めます。',
+'アラブ首長国連邦':'アラビア半島東部、ペルシャ湾沿岸にあります。','イスラエル':'地中海東岸にあります。','トルコ':'ヨーロッパとアジアの境界付近にあります。',
+'イラン':'西アジアでペルシャ湾の北側にあります。','イラク':'西アジア、メソポタミア地域にあります。','モンゴル':'中国とロシアにはさまれた内陸国です。',
+'ネパール':'ヒマラヤ山脈に位置する内陸国です。','カザフスタン':'中央アジアの大部分を占める内陸国です。','バングラデシュ':'南アジア、ベンガル湾沿岸にあります。',
+'イギリス':'ヨーロッパ北西部の島国です。','フランス':'西ヨーロッパにあります。','ドイツ':'中央ヨーロッパにあります。','イタリア':'地中海に突き出す半島を中心とする国です。',
+'スペイン':'イベリア半島の大部分を占めます。','ポルトガル':'イベリア半島西部、大西洋沿岸にあります。','オランダ':'西ヨーロッパ、北海沿岸にあります。',
+'ベルギー':'西ヨーロッパでフランス・ドイツ・オランダの間にあります。','スイス':'アルプス山脈周辺の内陸国です。','オーストリア':'中央ヨーロッパの内陸国です。',
+'ギリシャ':'バルカン半島南部と多くの島からなる国です。','ポーランド':'中央ヨーロッパ、バルト海沿岸にあります。','ロシア':'ヨーロッパ東部から北アジアまで広がります。',
+'ウクライナ':'東ヨーロッパ、黒海の北側にあります。','スウェーデン':'スカンディナビア半島東側にあります。','ノルウェー':'スカンディナビア半島西側にあります。',
+'フィンランド':'北ヨーロッパ、バルト海の北側にあります。','デンマーク':'ドイツの北側、北海とバルト海の間にあります。','アイスランド':'北大西洋にある島国です。',
+'アイルランド':'ヨーロッパ北西部、大西洋側の島にあります。','チェコ':'中央ヨーロッパの内陸国です。','ハンガリー':'中央ヨーロッパの内陸国です。',
+'ルーマニア':'東ヨーロッパ、黒海沿岸にあります。','クロアチア':'バルカン半島西部、アドリア海沿岸にあります。',
+'アメリカ合衆国':'北アメリカ大陸の中央部を中心に広がります。','カナダ':'北アメリカ大陸北部にあります。','メキシコ':'北アメリカ南部、アメリカ合衆国の南にあります。',
+'キューバ':'カリブ海最大の島国です。','ジャマイカ':'カリブ海にある島国です。','ブラジル':'南アメリカ東部の大部分を占めます。',
+'アルゼンチン':'南アメリカ南部、大西洋側にあります。','チリ':'南アメリカ西岸に細長く伸びています。','ペルー':'南アメリカ西部、太平洋沿岸にあります。',
+'コロンビア':'南アメリカ北西部にあります。','オーストラリア':'オセアニア最大の国で大陸全体に広がります。','ニュージーランド':'オーストラリアの南東、南太平洋にある島国です。',
+'エジプト':'アフリカ北東部、地中海と紅海に面します。','南アフリカ':'アフリカ大陸の南端部にあります。','モロッコ':'アフリカ北西端、大西洋と地中海に面します。',
+'ケニア':'東アフリカ、インド洋沿岸にあります。','ナイジェリア':'西アフリカ、ギニア湾沿岸にあります。','エチオピア':'東アフリカの内陸部にあります。',
+'ガーナ':'西アフリカ、ギニア湾沿岸にあります。'
+};
+function detailedGeographyHint(name){return subregionHints[name]||hemisphereHint(name)}
+
+function showHint(){
+  if(answered||hintLevel>=3)return;
+  const c=countries.find(x=>x.name===current);
+  hintLevel++;
+  hintPenalty=hintLevel*20;gameHintsUsed++;playerStats.totalHints=(playerStats.totalHints||0)+1;save();
+
+  let text='';
+  if(hintLevel===1){
+    text=`🌍 ヒント1：この国は「${c.region}」にあります。`;
+  }else if(hintLevel===2){
+    text=`🗺️ ヒント2：${geographyTypeHint(c.name)}`;
+  }else{
+    text=`🧭 ヒント3：${detailedGeographyHint(c.name)}`;
+  }
+
+  hintBox.style.display='block';
+  hintBox.innerHTML+=`${hintBox.innerHTML?'<br>':''}${text}`;
+  hintButton.textContent=hintLevel<3?`💡 次のヒントを見る（${hintLevel}/3）`:'💡 ヒントをすべて表示';
+  if(hintLevel>=3)hintButton.disabled=true;
+  hintCost.textContent=`この問題のヒント減点：−${hintPenalty}pt`;
+}
+function showBorderAnswer(){answerBox.style.display='block';answerBox.innerHTML=`<small>🟨 ANSWER</small><div class="country">${current}</div><div>地図上の黄色い国が答えです</div>`;highlightTarget()}
+function nextQuestion(){if(!answered)return;qIndex++;showQuestion()}
+function updateScore(){scoreDisplay.textContent='⭐ '+score+' pt'}
+
+function dayDiff(a,b){
+  const A=new Date(a+'T00:00:00'),B=new Date(b+'T00:00:00');
+  return Math.round((B-A)/86400000);
+}
+function getDailyStreak(){
+  const dates=[...new Set(playerStats.dailyDates||[])].sort();
+  if(!dates.length)return 0;
+  const today=dailyKey();
+  const last=dates[dates.length-1];
+  if(dayDiff(last,today)>1)return 0;
+  let streak=1;
+  for(let i=dates.length-1;i>0;i--){
+    if(dayDiff(dates[i-1],dates[i])===1)streak++;
+    else break;
+  }
+  return streak;
+}
+function updateHomeStats(){
+  const streak=getDailyStreak();
+  const p=document.getElementById('homePlayCount'),s=document.getElementById('homeDailyStreak'),b=document.getElementById('homeDailyBest'),h=document.getElementById('dailyHeroStreak');
+  if(p)p.textContent=playerStats.plays||0;
+  if(s)s.textContent=streak+'日';
+  if(b)b.textContent=(playerStats.dailyBest||0)>0?(playerStats.dailyBest+'/10'):'--';
+  if(h)h.textContent=`🔥 デイリー連続記録：${streak}日`;
+}
+function resultRank(correct,total,hints){
+  const rate=total?correct/total:0;
+  if(rate===1&&hints===0)return 'S';
+  if(rate>=.9)return 'A';
+  if(rate>=.7)return 'B';
+  if(rate>=.5)return 'C';
+  return 'D';
+}
+
+function finishGame(){
+  clearInterval(timer);
+  const today=dailyKey(),ys=playerStats.dailyScores?.[yesterdayKey()],firstDaily=mode==='daily'&&!(playerStats.dailyDates||[]).includes(today);
+  playerStats.plays=(playerStats.plays||0)+1;playerStats.totalCorrect=(playerStats.totalCorrect||0)+correctCount;playerStats.totalQuestions=(playerStats.totalQuestions||0)+questions.length;playerStats.bestCombo=Math.max(playerStats.bestCombo||0,maxCombo);
+  playerStats.modePlays=playerStats.modePlays||{capital:0,flag:0,border:0,location:0,daily:0};playerStats.modePlays[mode]=(playerStats.modePlays[mode]||0)+1;
+  if(mode==='daily'){playerStats.dailyDates=playerStats.dailyDates||[];if(!playerStats.dailyDates.includes(today))playerStats.dailyDates.push(today);playerStats.dailyDates=playerStats.dailyDates.slice(-400);playerStats.dailyBest=Math.max(playerStats.dailyBest||0,correctCount);playerStats.dailyScores=playerStats.dailyScores||{};playerStats.dailyScores[today]=Math.max(playerStats.dailyScores[today]??0,correctCount)}
+  const rank=resultRank(correctCount,questions.length,gameHintsUsed);scores.push({mode,difficulty:config.difficulty,region:config.region,rule:config.rule,score,correct:correctCount,total:questions.length,maxCombo,maxNoHintCombo,hints:gameHintsUsed,rank,date:new Date().toLocaleString('ja-JP')});scores=scores.slice(-100);save();checkTitles();updateHomeStats();
+  finalRank.textContent=rank;finalScore.textContent=score+' pt';let comp='';if(mode==='daily'){if(Number.isFinite(ys)){const d=correctCount-ys;comp=`<div class="dailyCompare">昨日 ${ys}/10 → 今日 ${correctCount}/10<br>${d>0?'📈 +'+d+'問アップ！':d<0?'📉 '+d+'問':'➡️ 昨日と同じ！'}</div>`}else comp='<div class="dailyCompare">昨日のデイリー記録はありません</div>'}
+  finalDetail.innerHTML=`<div class="resultGrid"><div class="resultMini">✅ 正解率<br>${Math.round(correctCount/questions.length*100)}%</div><div class="resultMini">🔥 最大コンボ<br>${maxCombo}</div><div class="resultMini">💡 ヒント<br>${gameHintsUsed}回</div><div class="resultMini">✨ ノーヒント連続<br>${maxNoHintCombo}</div></div>${comp}${mode==='daily'?`<p>📅 ${today}｜デイリー ${correctCount}/10<br>🔥 連続挑戦 ${getDailyStreak()}日</p>`:''}<p>${noMiss?'💎 ノーミス達成！':'🌍 次はさらに高得点を狙おう！'}</p>`;
+  const ss=document.getElementById('shareStatus');if(ss)ss.textContent='';firstDaily?showDailyClear(correctCount,ys):showScreen('result');
+}
+function shareResult(){
+  const modeName={capital:'首都モード',flag:'国旗モード',border:'国境モード',location:'国の位置モード',daily:'デイリーチャレンジ'}[mode],rank=resultRank(correctCount,questions.length,gameHintsUsed);
+  const text=mode==='daily'?`🌍 WORLD COUNTRY MASTER\n📅 今日のデイリー：${correctCount}/10！\n🏅 RANK ${rank}｜⭐ ${score}pt\n🔥 最大${maxCombo}COMBO\n\nあなたは何問正解できる？`:`🌍 WORLD COUNTRY MASTER\n${modeName}\n✅ ${correctCount}/${questions.length}問正解\n🏅 RANK ${rank}｜⭐ ${score}pt\n🔥 最大${maxCombo}COMBO\n\nあなたも挑戦してみよう！`;
+  const url='https://omakiiii0926.github.io/world-country-master/';if(navigator.share){navigator.share({title:'WORLD COUNTRY MASTER',text,url}).catch(()=>{})}else if(navigator.clipboard){navigator.clipboard.writeText(text+'\n'+url).then(()=>shareStatus.textContent='📋 結果とURLをコピーしました！').catch(()=>shareStatus.textContent='シェア機能を利用できませんでした。')}else shareStatus.textContent='このブラウザではシェア機能を利用できません。'
+}
+function goHome(){clearInterval(timer);showScreen('home')}
+function getISO2(f){const p=f.properties||{};return String(p['ISO3166-1-Alpha-2']||p.ISO_A2||p.iso_a2||p.ISO_A2_EH||p.WB_A2||'').toUpperCase()}
+function initMap(){if(typeof L==='undefined'){showMapError('initMap');return}clearMap();map=L.map('map',{zoomControl:true,attributionControl:false,worldCopyJump:true,minZoom:1}).setView([20,0],2);loadGeoJSON().then(g=>{const target=countries.find(c=>c.name===current);geoLayer=L.geoJSON(g,{style:f=>{const yes=getISO2(f)===target.iso;return{color:'#000',weight:yes?5:1.2,fillColor:yes?'#FFD600':'#FFFFFF',fillOpacity:1,opacity:1}},interactive:false}).addTo(map);highlightTarget();setTimeout(()=>map&&map.invalidateSize(),100)}).catch(()=>showMapError('initMap'))}
+function highlightTarget(){if(!geoLayer)return;const target=countries.find(c=>c.name===current);currentMapBounds=null;geoLayer.eachLayer(l=>{if(!l.feature)return;const yes=getISO2(l.feature)===target.iso;l.setStyle({color:'#000',weight:yes?5:1.2,fillColor:yes?'#FFD600':'#FFF',fillOpacity:1,opacity:1});if(yes){if(l.bringToFront)l.bringToFront();try{const b=l.getBounds();currentMapBounds?currentMapBounds.extend(b):currentMapBounds=b}catch{}}})}
+function moveToCountry(){if(!map||!geoLayer){borderInfo.textContent='⏳ 地図を読み込み中…';return}highlightTarget();if(currentMapBounds&&currentMapBounds.isValid())map.fitBounds(currentMapBounds,{padding:[45,45],maxZoom:6});borderInfo.textContent='📍 黄色で表示されている場所を確認しよう！'}
+
+
+const microCountryPoints={
+'VA':[41.9029,12.4534],'MC':[43.7384,7.4246],'SM':[43.9424,12.4578],'LI':[47.166,9.5554],
+'AD':[42.5063,1.5218],'MT':[35.9375,14.3754],'SG':[1.3521,103.8198],'BH':[26.0667,50.5577],
+'MV':[3.2028,73.2207],'NR':[-0.5228,166.9315],'TV':[-7.1095,177.6493],'PW':[7.515,134.5825],
+'MH':[7.1315,171.1845],'KI':[1.8709,-157.363],'GD':[12.1165,-61.679],'LC':[13.9094,-60.9789],
+'DM':[15.415,-61.371],'AG':[17.0608,-61.7964],'KN':[17.3578,-62.783],'VC':[13.2528,-61.1971]
+};
+function addMicroCountryMarkers(){
+  if(!map)return;
+  Object.entries(microCountryPoints).forEach(([iso,latlng])=>{
+    const c=countries.find(x=>x.iso===iso);if(!c)return;
+    const icon=L.divIcon({className:'',html:'<div class="microMarker" style="width:18px;height:18px"></div>',iconSize:[18,18],iconAnchor:[9,9]});
+    const m=L.marker(latlng,{icon,zIndexOffset:900}).addTo(map);
+    m.on('click',()=>answerLocation(iso,m));
+  });
+}
+
+function initLocationMap(){
+  if(typeof L==='undefined'){showMapError('initLocationMap');return;}
+  clearMap();
+  map=L.map('map',{zoomControl:true,attributionControl:false,worldCopyJump:true,minZoom:1}).setView([20,0],2);
+  loadGeoJSON().then(g=>{
+      geoLayer=L.geoJSON(g,{
+        style:()=>({color:'#000',weight:1.2,fillColor:'#FFFFFF',fillOpacity:1,opacity:1}),
+        onEachFeature:(feature,layer)=>{
+          const iso=getISO2(feature);
+          const c=countries.find(x=>x.iso===iso);
+          if(c){
+            layer.on('click',()=>answerLocation(c.iso,layer));
+            layer.on('mouseover',()=>{if(!answered)layer.setStyle({weight:2.5,fillColor:'#EAF7FF'})});
+            layer.on('mouseout',()=>{if(!answered)layer.setStyle({weight:1.2,fillColor:'#FFFFFF'})});
+          }
+        }
+      }).addTo(map);
+      addMicroCountryMarkers();setTimeout(()=>map&&map.invalidateSize(),100);
+    })
+    .catch(()=>showMapError('initLocationMap'));
+}
+function answerLocation(selectedISO,selectedLayer){
+  if(answered)return;
+  answered=true;
+  hintButton.disabled=true;
+  const target=countries.find(c=>c.name===current);
+  const correct=selectedISO===target.iso;
+
+  if(correct){
+    combo++;
+    maxCombo=Math.max(maxCombo,combo);
+    const comboBonus=Math.min(100,Math.max(0,(combo-1)*10));
+    const gained=Math.max(20,100+comboBonus-hintPenalty);
+    score+=gained;
+    correctCount++;
+    if(hintLevel===0){noHintCombo++;maxNoHintCombo=Math.max(maxNoHintCombo,noHintCombo)}else{noHintCombo=0}
+    feedback.textContent=`🎉 正解！ +${gained} pt${combo>=2?`　🔥 ${combo} COMBO!`:''}`;
+    unlockCountry(current);
+  }else{
+    score=Math.max(0,score-25);
+    combo=0;noHintCombo=0;
+    noMiss=false;playTone('wrong');vibrate([45,35,45]);
+    feedback.textContent=config.rule==='nomiss'?'💥 ノーミス失敗！':'❌ 不正解！ −25 pt';
+  }
+
+  let targetBounds=null;
+  geoLayer.eachLayer(l=>{
+    if(!l.feature)return;
+    const iso=getISO2(l.feature);
+    if(correct && iso===target.iso){
+      l.setStyle({color:'#000',weight:4,fillColor:'#22C55E',fillOpacity:1,opacity:1});
+      if(l.bringToFront)l.bringToFront();
+      try{targetBounds=l.getBounds()}catch{}
+    }else if(!correct && iso===selectedISO){
+      l.setStyle({color:'#000',weight:4,fillColor:'#EF4444',fillOpacity:1,opacity:1});
+      if(l.bringToFront)l.bringToFront();
+    }else if(!correct && iso===target.iso){
+      l.setStyle({color:'#000',weight:5,fillColor:'#FFD600',fillOpacity:1,opacity:1});
+      if(l.bringToFront)l.bringToFront();
+      try{targetBounds=l.getBounds()}catch{}
+    }else{
+      l.setStyle({color:'#000',weight:1.2,fillColor:'#FFFFFF',fillOpacity:1,opacity:1});
+    }
+  });
+
+  answerBox.style.display='block';
+  answerBox.innerHTML=`<small>${correct?'✅ CORRECT':'🟨 ANSWER'}</small><div class="country">${current}</div><div>${correct?'緑で表示された国が正解です':'黄色で表示された国が正解です'}</div>`;
+  legend.innerHTML=correct
+    ?'<span class="chip" style="background:#22C55E"></span>正解　<span class="chip white"></span>その他　<span class="chip blue"></span>海'
+    :'<span class="chip yellow"></span>正解　<span class="chip" style="background:#EF4444"></span>選んだ国　<span class="chip white"></span>その他';
+
+  if(targetBounds&&targetBounds.isValid())map.fitBounds(targetBounds,{padding:[45,45],maxZoom:5});
+  updateScore();
+  updateCombo(true);
+  nextButton.style.display='inline-block';
+}
+
+function unlockCountry(name){if(unlocked.includes(name))return;unlocked.push(name);save();const c=countries.find(x=>x.name===name);showUnlockModal(`<div class="unlockWrap"><div class="unlockKicker">NEW COUNTRY</div><div class="unlockIcon">📖✨</div><div class="unlockBurst">国図鑑アンロック！</div><div class="unlockFlag">${c.flag}</div><div class="unlockName">${c.name}</div><div class="unlockSub">新しい国が図鑑に登録されました</div><div class="unlockStars">✦ ✦ ✦</div></div>`)}
+function renderBook(){
+  const search=(document.getElementById('bookSearch')?.value||'').trim().toLowerCase(),state=document.getElementById('bookState')?.value||'all',region=document.getElementById('bookRegion')?.value||'all';
+  const pct=Math.round(unlocked.length/countries.length*100);bookProgress.textContent=`アンロック：${unlocked.length} / ${countries.length} か国（${pct}%）`;const fill=document.getElementById('bookProgressFill');if(fill)fill.style.width=pct+'%';countryGrid.innerHTML='';
+  const list=countries.filter(c=>{const u=unlocked.includes(c.name);return(!search||c.name.toLowerCase().includes(search))&&(state==='all'||state==='unlocked'&&u||state==='locked'&&!u)&&(region==='all'||c.region===region)});
+  list.forEach(c=>{const d=document.createElement('div'),u=unlocked.includes(c.name);if(u){d.className='countryCard';d.innerHTML=`<div class="countryFlag">${c.flag}</div><b>${c.name}</b>`;d.onclick=()=>showModal(`<div style="font-size:75px">${c.flag}</div><h2>${c.name}</h2><p>🏛️ 首都：${c.capital}</p><p>🌎 地域：${c.region}</p><p>🗺️ ${geographyTypeHint(c.name)}</p><p>🔤 ISO：${c.iso}</p>`)}else{d.className='countryCard locked';d.innerHTML='<div class="countryFlag">?</div><b>？？？</b>'}countryGrid.appendChild(d)});
+  if(!list.length)countryGrid.innerHTML='<p style="grid-column:1/-1;text-align:center">条件に合う国がありません。</p>';
+}
+function renderTitles(){titleList.innerHTML='';titleData.forEach(t=>{const d=document.createElement('div');d.className='titleCard';d.innerHTML=titleUnlocks.includes(t[0])?`<b>${t[1]}</b><div>${t[2]}</div>`:`<b>?</b><div>条件：${t[2]}</div>`;titleList.appendChild(d)})}
+
+function renderStats(){
+  const plays=playerStats.plays||0,correct=playerStats.totalCorrect||0,total=playerStats.totalQuestions||0,rate=total?Math.round(correct/total*100):0,m=playerStats.modePlays||{};
+  statsSummary.innerHTML=`<div class="statsCard">🎮 総プレイ<b>${plays}</b></div><div class="statsCard">✅ 総正解<b>${correct}</b></div><div class="statsCard">🎯 正答率<b>${rate}%</b></div><div class="statsCard">🔥 最高COMBO<b>${playerStats.bestCombo||0}</b></div><div class="statsCard">📅 デイリー連続<b>${getDailyStreak()}日</b></div><div class="statsCard">📚 図鑑<b>${unlocked.length}/195</b></div>`;
+  const labels={capital:'🏛️ 首都',flag:'🏳️ 国旗',border:'🗺️ 国境',location:'🧭 位置',daily:'📅 デイリー'},mx=Math.max(1,...Object.values(m));
+  modeStats.innerHTML=Object.keys(labels).map(k=>`<div class="modeBarRow"><span>${labels[k]}</span><div class="modeBar"><i style="width:${(m[k]||0)/mx*100}%"></i></div><b>${m[k]||0}</b></div>`).join('');
+  const best=Object.keys(labels).sort((a,b)=>(m[b]||0)-(m[a]||0))[0];statsExtra.innerHTML=`<div class="dailyCompare">⭐ 一番遊んでいるモード：${labels[best]}<br>💡 累計ヒント使用：${playerStats.totalHints||0}回</div>`;
+}
+
+function renderScores(){bestScore.textContent=(scores.length?Math.max(...scores.map(s=>s.score)):0)+' pt';scoreHistory.innerHTML='';scores.slice().reverse().forEach(s=>{const d=document.createElement('div');d.className='scoreRow';d.innerHTML=`<b>${{capital:'🏛️ 首都',flag:'🏳️ 国旗',border:'🗺️ 国境',location:'🧭 位置',daily:'📅 デイリー'}[s.mode]}</b>　${s.score}pt　${s.correct}/${s.total}${s.maxCombo?`　🔥${s.maxCombo}`:''}${s.rank?`　RANK ${s.rank}`:''}${Number.isFinite(s.hints)?`　💡${s.hints}`:''}`;scoreHistory.appendChild(d)})}
+function resetBook(){if(confirm('図鑑をリセットしますか？')){unlocked=[];save();renderBook()}}function resetTitles(){if(confirm('称号をリセットしますか？')){titleUnlocks=[];save();renderTitles()}}function resetScores(){if(confirm('スコアをリセットしますか？')){scores=[];save();renderScores()}}function resetAll(){if(confirm('全データをリセットしますか？')){unlocked=[];titleUnlocks=[];scores=[];playerStats={plays:0,dailyDates:[],dailyBest:0,totalHints:0,totalCorrect:0,totalQuestions:0,bestCombo:0,modePlays:{capital:0,flag:0,border:0,location:0,daily:0},dailyScores:{}};save();renderBook();renderTitles();renderScores();updateHomeStats()}}
+function showModal(html){modal.classList.remove('unlocking');modalBody.innerHTML=html;modal.classList.add('active')}function showUnlockModal(html){modalBody.innerHTML=html;modal.classList.add('active','unlocking')}function closeModal(){modal.classList.remove('active','unlocking')}
+document.addEventListener('DOMContentLoaded',()=>{difficultyInfo.textContent=window.difficultyInfo?window.difficultyInfo.easy:`🟢 初級：${easyNames.size}か国`;document.getElementById('difficultyInfo').textContent=`🟢 初級：${easyNames.size}か国`;renderBook();renderTitles();renderScores();updateHomeStats();renderPreferenceButtons()});
+</script>
+</body>
+</html>
